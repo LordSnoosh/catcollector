@@ -1,31 +1,18 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from .models import Cat
 
-# Create your views here.
-
-# Add the Cat class & list and view function below the imports
-class Cat:  # Note that parens are optional if not inheriting from another class
-  def __init__(self, name, breed, description, age):
-    self.name = name
-    self.breed = breed
-    self.description = description
-    self.age = age
-
-cats = [
-  Cat('Lolo', 'tabby', 'foul little demon', 3),
-  Cat('Sachi', 'tortoise shell', 'diluted tortoise shell', 0),
-  Cat('Raven', 'black tripod', '3 legged cat', 4)
-]
-
+# View functions
 
 def home(request):
-  return HttpResponse('<h1>Hello /ᐠ｡‸｡ᐟ\ﾉ</h1>')
+  return render(request, 'home.html')
 
 def about(request):
   return render(request, 'about.html')
 
 def cats_index(request):
-  # the 3rd arg is known as the "context"
-  return render(request, 'cats/index.html', {
-    'cats': cats
-  })
+  cats = Cat.objects.all()
+  return render(request, 'cats/index.html', { 'cats': cats })
+
+def cats_detail(request, cat_id):
+  cat = Cat.objects.get(id=cat_id)
+  return render(request, 'cats/detail.html', { 'cat': cat })
