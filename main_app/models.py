@@ -22,11 +22,9 @@ class Feeding(models.Model):
   date = models.DateField()
   meal = models.CharField(max_length=1, choices=MEALS, default=MEALS[0][0])
 
-# Create a cat_id FK
   cat = models.ForeignKey(Cat, on_delete=models.CASCADE)
 
   def __str__(self):
-    # Nice method for obtaining the friendly value of a Field.choice
     return f"{self.get_meal_display()} on {self.date}"
   class Meta:
       ordering = ['-date']
