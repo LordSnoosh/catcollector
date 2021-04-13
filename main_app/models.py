@@ -1,5 +1,6 @@
 from django.db import models
 from django.urls import reverse
+from datetime import date
 
 MEALS = (
   ('B', 'Breakfast'),
@@ -24,6 +25,7 @@ class Cat(models.Model):
   breed = models.CharField(max_length=100)
   description = models.TextField(max_length=250)
   age = models.IntegerField()
+  toys = models.ManyToManyField(Toy)
 
   def __str__(self):
     return self.name
