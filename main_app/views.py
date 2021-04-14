@@ -1,7 +1,10 @@
+import os
+import uuid
+import boto3
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
-from .models import Cat, Toy
+from .models import Cat, Toy, Photo
 from .forms import FeedingForm
 
 # View functions
@@ -49,6 +52,23 @@ def add_feeding(request, cat_id):
     new_feeding.cat_id = cat_id
     new_feeding.save()
   return redirect('detail', cat_id=cat_id)
+
+def add_photo(request, cat_id):
+  photo_file = request.FILES.get('photo-file', None)
+  if photo_file:
+    s3 = boto3.client('s3')
+    # need a unique "key" for s3 (filename)
+    key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
+    try:
+      s3.upload_fileobj(photo_file, os.environ['S3_BUCKET'], key)
+      url = f"{os.environ['S3_BASE_URL']}{os.environ['S3_BUCKET']}/{key}"
+      Photo.objects.create(url=url, cat_id=cat_id)
+    except:
+      print('An error occurred uploading file to S3')
+  return redirect('detail', cat_id=cat_id)
+
+
+
 
 def assoc_toy(request, cat_id, toy_id):
   Cat.objects.get(id=cat_id).toys.add(toy_id)
