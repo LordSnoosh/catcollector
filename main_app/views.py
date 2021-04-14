@@ -60,8 +60,9 @@ def add_photo(request, cat_id):
     # need a unique "key" for s3 (filename)
     key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
     try:
-      s3.upload_fileobj(photo_file, os.environ['S3_BUCKET'], key)
-      url = f"{os.environ['S3_BASE_URL']}{os.environ['S3_BUCKET']}/{key}"
+      bucket = os.environ['S3_BUCKET']
+      s3.upload_fileobj(photo_file, bucket, key)
+      url = f"{os.environ['S3_BASE_URL']}{bucket}/{key}"
       Photo.objects.create(url=url, cat_id=cat_id)
     except:
       print('An error occurred uploading file to S3')
