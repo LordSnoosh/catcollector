@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import os
 import uuid
 import boto3
@@ -10,11 +9,9 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .models import Cat, Toy, Photo
-=======
 from django.shortcuts import render, redirect
 from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from .models import Cat
->>>>>>> 54e1f4756d5ce8586bdf54d95f08f5819d5ea2f2
 from .forms import FeedingForm
 
 # View functions
@@ -47,18 +44,15 @@ def signup(request):
 @login_required
 def cats_detail(request, cat_id):
   cat = Cat.objects.get(id=cat_id)
-<<<<<<< HEAD
   toys_cat_doesnt_have = Toy.objects.exclude(id__in = cat.toys.all().values_list('id'))
   feeding_form = FeedingForm()
   return render(request, 'cats/detail.html', {
     'cat': cat,
     'feeding_form': feeding_form,
     'toys': toys_cat_doesnt_have
-=======
   feeding_form = FeedingForm()
   return render(request, 'cats/detail.html', {
     'cat': cat, 'feeding_form': feeding_form
->>>>>>> 54e1f4756d5ce8586bdf54d95f08f5819d5ea2f2
   })
 
 class CatCreate(LoginRequiredMixin, CreateView):
@@ -77,17 +71,13 @@ class CatDelete(LoginRequiredMixin, DeleteView):
   model = Cat
   success_url = '/cats/'
 
-<<<<<<< HEAD
 @login_required
-=======
->>>>>>> 54e1f4756d5ce8586bdf54d95f08f5819d5ea2f2
 def add_feeding(request, cat_id):
   form = FeedingForm(request.POST)
   if form.is_valid():
     new_feeding = form.save(commit=False)
     new_feeding.cat_id = cat_id
     new_feeding.save()
-<<<<<<< HEAD
   return redirect('detail', cat_id=cat_id)
 
 @login_required
@@ -132,6 +122,4 @@ class ToyUpdate(LoginRequiredMixin, UpdateView):
 class ToyDelete(LoginRequiredMixin, DeleteView):
   model = Toy
   success_url = '/toys/'
-=======
   return redirect('detail', cat_id=cat_id)
->>>>>>> 54e1f4756d5ce8586bdf54d95f08f5819d5ea2f2
