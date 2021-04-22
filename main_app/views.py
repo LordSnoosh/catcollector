@@ -6,9 +6,17 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.views.generic import ListView, DetailView
 from django.contrib.auth import login
 from django.contrib.auth.forms import UserCreationForm
+<<<<<<< HEAD
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+=======
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+>>>>>>> 816a649b97012fccce3c9fdd29c71137f0ac965f
 from .models import Cat, Toy, Photo
+from django.shortcuts import render, redirect
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
+from .models import Cat
 from .forms import FeedingForm
 
 # View functions
@@ -22,19 +30,40 @@ def about(request):
 @login_required
 def cats_index(request):
   cats = Cat.objects.filter(user=request.user)
+<<<<<<< HEAD
   # cats = request.user.cat_set.all()
   return render(request, 'cats/index.html', { 'cats': cats })
 
+=======
+  return render(request, 'cats/index.html', { 'cats': cats })
+
+def signup(request):
+  error_message = ''
+  if request.method == 'POST':
+    form = UserCreationForm(request.POST)
+    if form.is_valid():
+      user = form.save()
+      login(request, user)
+      return redirect('index')
+    else:
+      error_message = 'Invalid sign up - try again'
+  form = UserCreationForm()
+  context = {'form': form, 'error_message': error_message}
+  return render(request, 'registration/signup.html', context)
+
+>>>>>>> 816a649b97012fccce3c9fdd29c71137f0ac965f
 @login_required
 def cats_detail(request, cat_id):
   cat = Cat.objects.get(id=cat_id)
   toys_cat_doesnt_have = Toy.objects.exclude(id__in = cat.toys.all().values_list('id'))
-  # instantiate FeedingForm to be rendered in the template
   feeding_form = FeedingForm()
   return render(request, 'cats/detail.html', {
     'cat': cat,
     'feeding_form': feeding_form,
     'toys': toys_cat_doesnt_have
+  feeding_form = FeedingForm()
+  return render(request, 'cats/detail.html', {
+    'cat': cat, 'feeding_form': feeding_form
   })
 
 class CatCreate(LoginRequiredMixin, CreateView):
@@ -42,8 +71,12 @@ class CatCreate(LoginRequiredMixin, CreateView):
   fields = ['name', 'breed', 'description', 'age']
 
   def form_valid(self, form):
+<<<<<<< HEAD
     # Assign the logged in user's id to the cat's user
     form.instance.user = self.request.user
+=======
+    form.instance.user = self.request.user 
+>>>>>>> 816a649b97012fccce3c9fdd29c71137f0ac965f
     return super().form_valid(form)
 
 class CatUpdate(LoginRequiredMixin, UpdateView):
@@ -57,10 +90,7 @@ class CatDelete(LoginRequiredMixin, DeleteView):
 @login_required
 def add_feeding(request, cat_id):
   form = FeedingForm(request.POST)
-  # validate the form
   if form.is_valid():
-    # don't save the form to the db until it
-    # has the cat_id assigned
     new_feeding = form.save(commit=False)
     new_feeding.cat_id = cat_id
     new_feeding.save()
@@ -71,7 +101,6 @@ def add_photo(request, cat_id):
   photo_file = request.FILES.get('photo-file', None)
   if photo_file:
     s3 = boto3.client('s3')
-    # need a unique "key" for s3 (filename)
     key = uuid.uuid4().hex[:6] + photo_file.name[photo_file.name.rfind('.'):]
     try:
       bucket = os.environ['S3_BUCKET']
@@ -109,6 +138,7 @@ class ToyUpdate(LoginRequiredMixin, UpdateView):
 class ToyDelete(LoginRequiredMixin, DeleteView):
   model = Toy
   success_url = '/toys/'
+<<<<<<< HEAD
 
 def signup(request):
   error_message = ''
@@ -125,3 +155,6 @@ def signup(request):
   form = UserCreationForm()
   context = {'form': form, 'error_message': error_message}
   return render(request, 'registration/signup.html', context)
+=======
+  return redirect('detail', cat_id=cat_id)
+>>>>>>> 816a649b97012fccce3c9fdd29c71137f0ac965f

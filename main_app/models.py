@@ -21,6 +21,11 @@ class Toy(models.Model):
     return reverse('toys_detail', kwargs={'pk': self.id})
 
 
+MEALS = (
+    ('B', 'Breakfast'),
+    ('L', 'Lunch'),
+    ('D', 'Dinner')
+)
 class Cat(models.Model):
   name = models.CharField(max_length=100)
   breed = models.CharField(max_length=100)
@@ -35,6 +40,7 @@ class Cat(models.Model):
   def get_absolute_url(self):
     return reverse('detail', kwargs={'cat_id': self.id})
 
+<<<<<<< HEAD
   def fed_for_today(self):
     return self.feeding_set.filter(date=date.today()).count() >= len(MEALS)  
 
@@ -48,10 +54,17 @@ class Feeding(models.Model):
     default=MEALS[0][0]
   )
   # create a cat_id column in the db
+=======
+class Feeding(models.Model):
+  date = models.DateField()
+  meal = models.CharField(max_length=1, choices=MEALS, default=MEALS[0][0])
+
+>>>>>>> 54e1f4756d5ce8586bdf54d95f08f5819d5ea2f2
   cat = models.ForeignKey(Cat, on_delete=models.CASCADE)
 
   def __str__(self):
     return f"{self.get_meal_display()} on {self.date}"
+<<<<<<< HEAD
 
   class Meta:
     ordering = ['-date']
@@ -63,3 +76,7 @@ class Photo(models.Model):
 
   def __str__(self):
     return f"Photo for cat_id: {self.cat_id} @{self.url}"
+=======
+  class Meta:
+      ordering = ['-date']
+>>>>>>> 54e1f4756d5ce8586bdf54d95f08f5819d5ea2f2

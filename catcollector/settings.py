@@ -120,7 +120,6 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-# Specify where successful logins/logouts should redirect to
 LOGIN_REDIRECT_URL = '/cats/'
 LOGOUT_REDIRECT_URL = '/'
 
